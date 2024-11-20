@@ -20,9 +20,15 @@ app.use(express.json());
 // CORS settings
 app.use(
   cors({
-    origin: "http://localhost:3000", // Adjust to your client origin as needed
+    origin: process.env.CLIENT_ORIGIN || "http://localhost:3000", // Adjust or use an environment variable for client origin
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allowed HTTP methods
+    allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
+    credentials: true, // Include credentials like cookies (optional, set true if needed)
   })
 );
+
+// Handle preflight requests (OPTIONS)
+app.options("*", cors());
 
 // Register routers
 app.use("/api/admin", adminRouter);
@@ -35,6 +41,6 @@ app.use(errorHandler.errorHandler());
 // Start the server
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Listening on port : ${PORT}`);
-  
 });
+
 
