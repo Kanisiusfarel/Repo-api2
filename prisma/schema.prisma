@@ -1,0 +1,108 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  schemas  = ["projectevents"]
+}
+
+model Users {
+  user_id           Int             @id @default(autoincrement())
+  name              String
+  email             String          @unique
+  password          String
+  role              String
+  refresh_token     String?
+  access_token      String?
+  google_id         String?
+  created_at        DateTime        @default(now())
+  transactions      Transactions[]
+  bookings          Bookings[]
+  events_created    Events[]        @relation("EventsCreated")
+  coupons_created   Coupons[]       @relation("CouponsCreated")
+
+  @@schema("projectevents")
+}
+
+model Events {
+  event_id          Int            @id @default(autoincrement())
+  name              String
+  description       String
+  date              DateTime
+  stock             Int
+  image             String?
+  category          String 
+  price             Float
+  discounted_price  Float
+  created_by        Int
+  created_at        DateTime       @default(now())
+  transactions      Transactions[]
+  bookings          Bookings[]
+
+
+  created_by_user   Users          @relation("EventsCreated", fields: [created_by], references: [user_id])
+
+  @@schema("projectevents")
+}
+
+model Transactions {
+  transaction_id    Int       @id @default(autoincrement())
+  userId            Int
+  eventId           Int
+  quantity          Int
+  couponId          Int?      // Nullable if no coupon is used
+  total_price       Int
+  total_amount      Float
+  transaction_date  DateTime  @default(now())
+
+  user              Users     @relation(fields: [userId], references: [user_id])
+  event             Events    @relation(fields: [eventId], references: [event_id])
+  coupon            Coupons?  @relation(fields: [couponId], references: [coupon_id])
+  
+  payments          Payments[] // Define the reverse relation field here
+
+  @@schema("projectevents")
+}
+
+model Payments {
+  payment_id        Int       @id @default(autoincrement())
+  transaction_id    Int       @unique
+  payment_type      String
+  payment_amount    Float
+  payment_date      DateTime  @default(now())
+
+  transaction       Transactions @relation(fields: [transaction_id], references: [transaction_id])
+
+  @@schema("projectevents")
+}
+
+model Coupons {
+  coupon_id             Int       @id @default(autoincrement())
+  productId             Int?
+  code                  String    @unique
+  discount_percentage   Int
+  start_date            DateTime
+  end_date              DateTime
+  created_by            Int
+  transactions          Transactions[]
+
+  created_by_user       Users     @relation("CouponsCreated", fields: [created_by], references: [user_id])
+
+  @@schema("projectevents")
+}
+
+model Bookings {
+  booking_id          Int         @id @default(autoincrement())
+  userId              Int
+  eventId             Int
+  number_of_tickets   Int
+  booking_date        DateTime    @default(now())
+
+  user                Users       @relation(fields: [userId], references: [user_id])
+  event               Events      @relation(fields: [eventId], references: [event_id])
+
+  @@schema("projectevents")
+}
