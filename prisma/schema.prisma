@@ -6,7 +6,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  schemas  = ["projectevents"]
+  schemas  = ["public"]
 }
 
 model Users {
@@ -24,7 +24,7 @@ model Users {
   events_created    Events[]        @relation("EventsCreated")
   coupons_created   Coupons[]       @relation("CouponsCreated")
 
-  @@schema("projectevents")
+  @@schema("public")
 }
 
 model Events {
@@ -45,7 +45,7 @@ model Events {
 
   created_by_user   Users          @relation("EventsCreated", fields: [created_by], references: [user_id])
 
-  @@schema("projectevents")
+  @@schema("public")
 }
 
 model Transactions {
@@ -64,7 +64,7 @@ model Transactions {
   
   payments          Payments[] // Define the reverse relation field here
 
-  @@schema("projectevents")
+  @@schema("public")
 }
 
 model Payments {
@@ -76,7 +76,7 @@ model Payments {
 
   transaction       Transactions @relation(fields: [transaction_id], references: [transaction_id])
 
-  @@schema("projectevents")
+  @@schema("public")
 }
 
 model Coupons {
@@ -91,7 +91,7 @@ model Coupons {
 
   created_by_user       Users     @relation("CouponsCreated", fields: [created_by], references: [user_id])
 
-  @@schema("projectevents")
+  @@schema("public")
 }
 
 model Bookings {
@@ -104,5 +104,5 @@ model Bookings {
   user                Users       @relation(fields: [userId], references: [user_id])
   event               Events      @relation(fields: [eventId], references: [event_id])
 
-  @@schema("projectevents")
+  @@schema("public")
 }
