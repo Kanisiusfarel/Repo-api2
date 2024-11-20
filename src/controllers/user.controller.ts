@@ -102,7 +102,7 @@ export class UserController {
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
-        res.status(500).send({
+        res.status(400).send({
           message: "Failed to retrieve events",
           status: res.statusCode,
           detail: error.message,
