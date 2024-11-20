@@ -6,10 +6,10 @@
     "build": "tsc",
     "start": "node dist/app.js",
     "dev": "ts-node src/app.ts",
-    "start:prod" : "node dist/app.js",
-		"prisma:migrate": "npx prisma migrate dev",
-		"prisma:generate": "prisma generate",
-		"postinstall": "prisma generate"
+    "start:prod": "node dist/app.js",
+    "prisma:migrate": "npx prisma migrate dev",
+    "prisma:generate": "prisma generate",
+    "postinstall": "prisma generate"
   },
   "keywords": [],
   "author": "",
@@ -32,9 +32,11 @@
     "bcryptjs": "^2.4.3",
     "cloudinary": "^2.5.1",
     "cors": "^2.8.5",
+    "ejs": "^3.1.10",
     "express": "^4.21.1",
     "jsonwebtoken": "^9.0.2",
     "multer": "^1.4.5-lts.1",
+    "nodemailer": "^6.9.16",
     "zod": "^3.23.8"
   }
 }
